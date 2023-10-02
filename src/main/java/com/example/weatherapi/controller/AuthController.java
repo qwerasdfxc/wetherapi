@@ -20,16 +20,16 @@ public class AuthController {
 
 
     @PostMapping("register")
-    public Mono<String> registration(Mono<Principal> principal) {
-        stationsService.getDataFromWeatherApi();
+    public Mono<String> registration(Mono<Principal> principal) throws InterruptedException {
+        stationsService.generateNewWeatherData();
         return principal
                 .map(Principal::getName)
                 .map(name -> String.format("Hello, %s", name));
     }
 
     @PostMapping("save_stations")
-    public String savee(){
-        stationsService.randomStationsGenerator();
+    public String savee() throws InterruptedException {
+        stationsService.generateNewWeatherData();
         return "ok";
     }
 }

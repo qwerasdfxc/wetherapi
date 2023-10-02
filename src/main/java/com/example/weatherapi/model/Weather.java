@@ -17,25 +17,25 @@ public class Weather {
     private Long id;
 
     @Column("temperature")
-    private String temperature;
+    private Integer temperature;
 
     @Column("wind_kph")
-    private String windKph;
+    private Integer windKph;
 
     @Column("wind_dir")
-    private String windDir;
+    private Direction windDir;
 
-    @Column("will_it_rain")
+    @Column("is_rain")
     private Boolean isRain;
 
-    @Column("will_it_snow")
+    @Column("is_snow")
     private Boolean isSnow;
 
     @Column("octane")
     private Integer octane;
 
     @Column("cloud_type")
-    private String cloudType;
+    private CloudType cloudType;
 
     @Column("station_id")
     private Long stationId;
