@@ -24,4 +24,8 @@ public class UserService implements ReactiveUserDetailsService {
     public Mono<User> findUserByUsername(String username) {
         return userRepository.findByUsername(username);
     }
+
+    public Mono<User> save(User user){
+        return userRepository.save(user);
+    }
 }

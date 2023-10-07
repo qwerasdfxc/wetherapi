@@ -1,5 +1,7 @@
 package com.example.weatherapi.controller;
 
+import com.example.weatherapi.config.JwtUtil;
+import com.example.weatherapi.model.User;
 import com.example.weatherapi.service.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,8 +18,11 @@ public class AuthController {
 
     private final UserService userService;
 
-    public AuthController(UserService userService) {
+    private final JwtUtil jwtUtil;
+
+    public AuthController(UserService userService, JwtUtil jwtUtil) {
         this.userService = userService;
+        this.jwtUtil = jwtUtil;
     }
 
 
@@ -25,14 +30,19 @@ public class AuthController {
     public Mono<ResponseEntity> register(ServerWebExchange swe,
                                       @RequestParam("login") String username,
                                       @RequestParam("password") String password) {
-        return
+        String key = jwtUtil.generateKey();
+        User user = User.builder().username(username).password(password).key(key).build();
+        userService.save(user);
+
+        return Mono.just(ResponseEntity.ok(jwtUtil.generateJWT(user)));
     }
 
     @PostMapping("get-api-key")
     public Mono<ResponseEntity<?>> getKey(ServerWebExchange swe,
-                                          @RequestParam("login") String username,
+                                          @RequestParam("login") String login,
                                           @RequestParam("password") String password){
-        return userService.findUserByUsername(username).map(x ->
+//        return Mono.just(ResponseEntity.ok(jwtUtil.generateKey()));
+        return userService.findUserByUsername(login).map(x ->
                     x.getPassword().equals(password) ?
                             ResponseEntity.ok(x.getKey())
                             : ResponseEntity.status(HttpStatus.UNAUTHORIZED).build()

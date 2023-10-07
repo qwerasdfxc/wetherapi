@@ -31,7 +31,7 @@ public class SecurityConfig {
                 .authenticationManager(authenticationManager)
                 .securityContextRepository(securityContextRepository)
                 .authorizeExchange()
-                .pathMatchers("/api/register", "/api/station*").permitAll()
+                .pathMatchers("/api/register", "/api/station*", "/api/get-api-key").permitAll()
                 .anyExchange().authenticated()
                 .and()
                 .build();
