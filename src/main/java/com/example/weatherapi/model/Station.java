@@ -7,11 +7,12 @@ import org.springframework.data.relational.core.mapping.Column;
 import org.springframework.data.relational.core.mapping.Table;
 
 import javax.annotation.processing.Generated;
+import java.io.Serializable;
 
 @Table(schema = "weather", name = "station")
 @Data
 @Builder
-public class Station {
+public class Station implements Serializable{
 
     @Id
     @Column("id")

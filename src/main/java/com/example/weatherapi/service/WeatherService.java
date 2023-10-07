@@ -1,8 +1,8 @@
 package com.example.weatherapi.service;
 
-import com.example.weatherapi.model.Station;
 import com.example.weatherapi.model.Weather;
 import com.example.weatherapi.repository.WeatherRepository;
+import org.springframework.data.redis.core.ReactiveRedisTemplate;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
 

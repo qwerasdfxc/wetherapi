@@ -1,19 +1,24 @@
 package com.example.weatherapi.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Builder;
 import lombok.Data;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.Column;
 import org.springframework.data.relational.core.mapping.Table;
 
+import java.io.Serializable;
+
 @Data
 @Table(schema = "weather", name = "weather")
 @Builder
 
-public class Weather {
+public class Weather implements Serializable {
 
     @Id
     @Column("id")
+    @JsonIgnore
     private Long id;
 
     @Column("temperature")

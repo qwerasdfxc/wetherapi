@@ -1,35 +1,44 @@
 package com.example.weatherapi.controller;
 
-import com.example.weatherapi.service.StationsService;
+import com.example.weatherapi.service.UserService;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
-
-import java.security.Principal;
 
 @RestController
 @RequestMapping("api/")
 public class AuthController {
 
-    private final StationsService stationsService;
+    private final UserService userService;
 
-    public AuthController(StationsService stationsService) {
-        this.stationsService = stationsService;
+    public AuthController(UserService userService) {
+        this.userService = userService;
     }
 
 
     @PostMapping("register")
-    public Mono<String> registration(Mono<Principal> principal) throws InterruptedException {
-        stationsService.generateNewWeatherData();
-        return principal
-                .map(Principal::getName)
-                .map(name -> String.format("Hello, %s", name));
+    public Mono<ResponseEntity> register(ServerWebExchange swe,
+                                      @RequestParam("login") String username,
+                                      @RequestParam("password") String password) {
+        return
     }
 
-    @PostMapping("save_stations")
-    public String savee() throws InterruptedException {
-        stationsService.generateNewWeatherData();
-        return "ok";
+    @PostMapping("get-api-key")
+    public Mono<ResponseEntity<?>> getKey(ServerWebExchange swe,
+                                          @RequestParam("login") String username,
+                                          @RequestParam("password") String password){
+        return userService.findUserByUsername(username).map(x ->
+                    x.getPassword().equals(password) ?
+                            ResponseEntity.ok(x.getKey())
+                            : ResponseEntity.status(HttpStatus.UNAUTHORIZED).build()
+                ).defaultIfEmpty(ResponseEntity.status(HttpStatus.UNAUTHORIZED).build()
+        );
     }
+
+
 }

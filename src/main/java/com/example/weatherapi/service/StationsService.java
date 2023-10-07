@@ -30,7 +30,7 @@ public class StationsService {
     }
 
 //    @Scheduled(fixedRate = 1000 * 60 * 60 * 3)
-    public void generateNewWeatherData() throws InterruptedException {
+    public void generateNewWeatherData(){
         Random random = new Random();
         Flux<Weather> weatherFlux = weatherRepository.findAll().flatMap(x ->
                 {
