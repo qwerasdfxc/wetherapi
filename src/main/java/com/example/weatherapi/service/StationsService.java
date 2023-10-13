@@ -1,38 +1,43 @@
 package com.example.weatherapi.service;
 
+import com.example.weatherapi.DTO.StationDTO;
+import com.example.weatherapi.mapper.StationListMapper;
+import com.example.weatherapi.mapper.StationMapper;
 import com.example.weatherapi.model.CloudType;
 import com.example.weatherapi.model.Direction;
 import com.example.weatherapi.model.Station;
 import com.example.weatherapi.model.Weather;
 import com.example.weatherapi.repository.StationRepository;
 import com.example.weatherapi.repository.WeatherRepository;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
-import reactor.core.scheduler.Schedulers;
 
 import java.util.Locale;
 import java.util.Random;
-import java.util.logging.Logger;
 
 @Service
 public class StationsService {
-    Logger logger = Logger.getLogger("StationsService");
 
     private final StationRepository stationRepository;
     private final WeatherRepository weatherRepository;
 
+    private final StationMapper stationMapper;
+    private final StationListMapper stationListMapper;
+    private final Random random = new Random();
 
-    public StationsService(StationRepository stationRepository, WeatherRepository weatherRepository) {
+
+
+    public StationsService(StationRepository stationRepository, WeatherRepository weatherRepository, StationMapper stationMapper, StationListMapper stationListMapper) {
         this.stationRepository = stationRepository;
         this.weatherRepository = weatherRepository;
+        this.stationMapper = stationMapper;
+        this.stationListMapper = stationListMapper;
     }
 
 //    @Scheduled(fixedRate = 1000 * 60 * 60 * 3)
     public void generateNewWeatherData(){
-        Random random = new Random();
-        Flux<Weather> weatherFlux = weatherRepository.findAll().flatMap(x ->
+        weatherRepository.findAll().flatMap(x ->
                 {
                     Weather weather = Weather.builder()
                             .id(x.getId())
@@ -48,14 +53,16 @@ public class StationsService {
                     weatherRepository.save(weather).subscribe();
                     return Mono.just(weather);
                 }
-        );
+        ).subscribe();
 
-        weatherFlux.subscribe();
 
     }
 
     public Flux<Station> findAll(){
+        //TODO how to convert flux<Station> to DTO using mapstruct
+//        return stationRepository.findAll().collectList().flatMap(x -> se)
         return stationRepository.findAll();
+
     }
 
     public void saveRandomStations() {
