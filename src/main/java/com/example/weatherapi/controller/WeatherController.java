@@ -6,6 +6,7 @@ import com.example.weatherapi.service.StationsService;
 import com.example.weatherapi.service.UserService;
 import com.example.weatherapi.service.WeatherService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ServerWebExchange;
@@ -23,8 +24,8 @@ public class WeatherController {
 
 
     @GetMapping("stations")
-    public Flux<?> getStations(ServerWebExchange serverWebExchange, @RequestParam("key") String key){
-        return userService.existsByKey(key).flatMapMany(x -> {
+    public Flux<?> getStations(ServerWebExchange serverWebExchange){
+        return userService.existsByKey(serverWebExchange.getRequest().getHeaders().getFirst(HttpHeaders.AUTHORIZATION)).flatMapMany(x -> {
             if(x)
                 return stationsService.findAll();
             else{
@@ -35,8 +36,8 @@ public class WeatherController {
     }
 
     @GetMapping("stations/{station_code}")
-    public Mono<?> getWeatherByStation(ServerWebExchange serverWebExchange, @PathVariable Long station_code, @RequestParam("key") String key){
-        return userService.existsByKey(key).flatMap(x -> {
+    public Mono<?> getWeatherByStation(ServerWebExchange serverWebExchange, @PathVariable Long station_code){
+        return userService.existsByKey(serverWebExchange.getRequest().getHeaders().getFirst(HttpHeaders.AUTHORIZATION)).flatMap(x -> {
             if(x)
                 return weatherService.findByStationId(station_code);
             else{

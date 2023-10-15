@@ -4,9 +4,6 @@ import lombok.*;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.Column;
 import org.springframework.data.relational.core.mapping.Table;
-import org.springframework.security.core.GrantedAuthority;
-
-import java.util.Collection;
 
 @Data
 @Table(schema = "weather", name = "user")
@@ -20,7 +17,7 @@ public class User {
     private Long id;
 
     @Column("login")
-    private String username;
+    private String login;
 
     @Column("password")
     private String password;
@@ -28,8 +25,8 @@ public class User {
     @Column("key")
     private String key;
 
-    public User(String username, String password) {
-        this.username = username;
+    public User(String login, String password) {
+        this.login = login;
         this.password = password;
     }
 

@@ -4,6 +4,7 @@ import com.example.weatherapi.exception.AuthException;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Configuration;
 import reactor.core.publisher.Mono;
 
 import java.util.Base64;

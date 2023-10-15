@@ -62,7 +62,7 @@ public class SecurityConfig {
     private AuthenticationWebFilter bearerAuthenticationWebFilter(AuthenticationManager authenticationManager){
         AuthenticationWebFilter bearerAuthenticationWebFilter = new AuthenticationWebFilter(authenticationManager);
         bearerAuthenticationWebFilter.setServerAuthenticationConverter(new BearerTokenServerAuthenticationConverter(new JwtHandler(secret)));
-        //TODO dont work(like in video)
+//        TODO dont work(like in video)
 //        bearerAuthenticationWebFilter.setRequiresAuthenticationMatcher(ServerWebExchangeMatcher.pattermatcher);
 
         bearerAuthenticationWebFilter.setRequiresAuthenticationMatcher(new PathPatternParserServerWebExchangeMatcher("/api/get-api-key"));

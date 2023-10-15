@@ -8,8 +8,6 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Bean;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Mono;
@@ -39,7 +37,7 @@ public class SecurityService {
     private TokenDetails generateToken(User user) {
         Map<String, Object> claims = new HashMap<>(){{
             put("role", "user");
-            put("username", user.getUsername());
+            put("username", user.getLogin());
         }};
         return generateToken(claims, user.getId().toString());
     }
@@ -70,7 +68,7 @@ public class SecurityService {
     }
 
     public Mono<TokenDetails> authenticate(String username, String password) {
-        return userRepository.findFirstByUsername(username)
+        return userRepository.findFirstByLogin(username)
                 .flatMap(user -> {
 //                    if (!user.isEnabled()) {
 //                        return Mono.error(new AuthException("Account disabled", "DISABLED"));

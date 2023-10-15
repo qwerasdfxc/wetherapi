@@ -27,7 +27,6 @@ public class StationsService {
     private final Random random = new Random();
 
 
-
     public StationsService(StationRepository stationRepository, WeatherRepository weatherRepository, StationMapper stationMapper, StationListMapper stationListMapper) {
         this.stationRepository = stationRepository;
         this.weatherRepository = weatherRepository;
@@ -35,8 +34,8 @@ public class StationsService {
         this.stationListMapper = stationListMapper;
     }
 
-//    @Scheduled(fixedRate = 1000 * 60 * 60 * 3)
-    public void generateNewWeatherData(){
+    //    @Scheduled(fixedRate = 1000 * 60 * 60 * 3)
+    public void generateNewWeatherData() {
         weatherRepository.findAll().flatMap(x ->
                 {
                     Weather weather = Weather.builder()
@@ -45,7 +44,7 @@ public class StationsService {
                             .octane((int) (Math.random() * 10))
                             .cloudType(CloudType.values()[random.nextInt(CloudType.values().length)])
                             .windKph((int) (Math.random() * 30))
-                            .temperature((int)( Math.random() * 70) - 35)
+                            .temperature((int) (Math.random() * 70) - 35)
                             .isSnow(random.nextBoolean())
                             .isRain(random.nextBoolean())
                             .windDir(Direction.values()[random.nextInt(Direction.values().length)])
@@ -58,10 +57,11 @@ public class StationsService {
 
     }
 
-    public Flux<Station> findAll(){
+    public Flux<StationDTO> findAll() {
         //TODO how to convert flux<Station> to DTO using mapstruct
 //        return stationRepository.findAll().collectList().flatMap(x -> se)
-        return stationRepository.findAll();
+        return stationRepository.findAll().map(stationMapper::map);
+//        return stationRepository.findAll();
 
     }
 

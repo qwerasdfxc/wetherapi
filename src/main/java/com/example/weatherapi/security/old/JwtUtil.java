@@ -52,17 +52,7 @@
 //                .getBody();
 //    }
 //
-//    @SneakyThrows
-//    public String generateKey(){
-//        Key key = keyGenerator.generateKey();
-//        Cipher cipher = Cipher.getInstance("DES/ECB/PKCS5Padding");
-//        cipher.init(cipher.ENCRYPT_MODE, key);
 //
-//        String msg = new String("test");
-//        byte[] bytes = cipher.doFinal(msg.getBytes());
-////        return new String(bytes, StandardCharsets.UTF_8);
-//        return Base64.getEncoder().encodeToString(bytes);
-//    }
 //
 //    public String generateJWT(User user) {
 //        Date date = new Date(new Date().getTime() + Long.parseLong(expiration) * 1000);
