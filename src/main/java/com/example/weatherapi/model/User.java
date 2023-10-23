@@ -2,15 +2,19 @@ package com.example.weatherapi.model;
 
 import lombok.*;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.redis.core.RedisHash;
 import org.springframework.data.relational.core.mapping.Column;
 import org.springframework.data.relational.core.mapping.Table;
+
+import java.io.Serializable;
 
 @Data
 @Table(schema = "weather", name = "user")
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class User {
+//@RedisHash("User")
+public class User implements Serializable {
 
     @Id
     @Column("id")

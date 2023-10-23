@@ -3,6 +3,7 @@ package com.example.weatherapi.model;
 import lombok.Builder;
 import lombok.Data;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.redis.core.RedisHash;
 import org.springframework.data.relational.core.mapping.Column;
 import org.springframework.data.relational.core.mapping.Table;
 
@@ -12,6 +13,7 @@ import java.io.Serializable;
 @Table(schema = "weather", name = "station")
 @Data
 @Builder
+//@RedisHash("Student")
 public class Station implements Serializable{
 
     @Id
