@@ -2,8 +2,7 @@ package com.example.weatherapi.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import lombok.Builder;
-import lombok.Data;
+import lombok.*;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.redis.core.RedisHash;
 import org.springframework.data.relational.core.mapping.Column;
@@ -12,8 +11,9 @@ import org.springframework.data.relational.core.mapping.Table;
 import java.io.Serializable;
 
 @Data
-@Table(schema = "weather", name = "weather")
-@Builder
+@Table(schema = "weather", name = "weather") @Builder
+@RequiredArgsConstructor
+@AllArgsConstructor
 //@RedisHash("Weather")
 public class Weather implements Serializable {
 

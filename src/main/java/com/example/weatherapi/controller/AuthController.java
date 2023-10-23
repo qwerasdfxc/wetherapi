@@ -1,25 +1,29 @@
 package com.example.weatherapi.controller;
 
 import com.example.weatherapi.DTO.UserDTO;import com.example.weatherapi.mapper.UserMapper;
+import com.example.weatherapi.model.CloudType;
+import com.example.weatherapi.model.Direction;
+import com.example.weatherapi.model.Station;
+import com.example.weatherapi.model.Weather;
 import com.example.weatherapi.security.BearerTokenServerAuthenticationConverter;
 import com.example.weatherapi.security.JwtHandler;
 import com.example.weatherapi.security.SecurityService;
 import com.example.weatherapi.service.UserService;
-import lombok.RequiredArgsConstructor;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.redis.core.ReactiveRedisOperations;
+import org.springframework.data.redis.core.ReactiveRedisTemplate;
+import org.springframework.data.redis.core.ReactiveValueOperations;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
 
 import java.util.Base64;
+import java.util.Random;
 
 @RestController
 @RequestMapping("api/")
-@RequiredArgsConstructor
 public class AuthController {
 
     private final UserService userService;
@@ -31,7 +35,18 @@ public class AuthController {
     @Value("${jwt.secret}")
     private String secret;
 
+    private final ReactiveRedisTemplate<String, Station> stationRedisTemplate;
+    private final ReactiveRedisTemplate<String, Weather> weatherRedisTemplate;
+
     private final BearerTokenServerAuthenticationConverter bearerTokenServerAuthenticationConverter = new BearerTokenServerAuthenticationConverter(new JwtHandler(secret));
+
+    public AuthController(UserService userService, SecurityService securityService, UserMapper userMapper, ReactiveRedisTemplate<String, Station> StationRedisTemplate, ReactiveRedisTemplate<String, Weather> weatherRedisTemplate) {
+        this.userService = userService;
+        this.securityService = securityService;
+        this.userMapper = userMapper;
+        this.stationRedisTemplate = StationRedisTemplate;
+        this.weatherRedisTemplate = weatherRedisTemplate;
+    }
 
     @PostMapping("register")
     public Mono<String> register(ServerWebExchange swe,
@@ -58,5 +73,28 @@ public class AuthController {
 //                            : ResponseEntity.status(HttpStatus.UNAUTHORIZED).build()
 //                ).defaultIfEmpty(ResponseEntity.status(HttpStatus.UNAUTHORIZED).build()
 //        );
+    }
+
+    @PostMapping("test")
+    public String test(){
+//        ReactiveValueOperations<String, Station> stationOperations = stationRedisTemplate.opsForValue();
+//        stationOperations.set("test", new Station(1L, "werwer", "rus")).subscribe();
+        Random random = new Random();
+        Weather weather = Weather.builder()
+                .id(3245L)
+                .stationId(11234L)
+                .octane((int) (Math.random() * 10))
+                .cloudType(CloudType.values()[random.nextInt(CloudType.values().length)])
+                .windKph((int) (Math.random() * 30))
+                .temperature((int) (Math.random() * 70) - 35)
+                .isSnow(random.nextBoolean())
+                .isRain(random.nextBoolean())
+                .windDir(Direction.values()[random.nextInt(Direction.values().length)])
+                .build();
+
+        ReactiveValueOperations<String, Weather> weatherOperations =weatherRedisTemplate.opsForValue();
+        weatherOperations.set("test2", weather).subscribe();
+//        weatherOperations.multiGet()
+        return "ok";
     }
 }

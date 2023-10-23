@@ -1,14 +1,14 @@
 package com.example.weatherapi.config;
 
 import com.example.weatherapi.model.Station;
+import com.example.weatherapi.model.Weather;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
-import org.springframework.data.redis.connection.ReactiveRedisConnectionFactory;
-import org.springframework.data.redis.connection.RedisPassword;
-import org.springframework.data.redis.connection.RedisStandaloneConfiguration;
+import org.springframework.dao.DataAccessException;
+import org.springframework.data.redis.connection.*;
 import org.springframework.data.redis.connection.jedis.JedisClientConfiguration;
 import org.springframework.data.redis.connection.jedis.JedisConnectionFactory;
 import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
@@ -37,12 +37,42 @@ public class RedisConfig {
     @Value("${redis.timeout}")
     private int timeout;
 
-//    @Bean
-//    @Primary
-//    ReactiveRedisConnectionFactory reactiveRedisConnectionFactory(){
-//        return new LettuceConnectionFactory();
-//    }
+    @Bean
+    @Primary
+    ReactiveRedisConnectionFactory reactiveRedisConnectionFactory(){
+        return new LettuceConnectionFactory();
+    }
 
+
+    @Bean
+    public ReactiveRedisTemplate<String, Station> reactiveRedisTemplate(
+            ReactiveRedisConnectionFactory factory) {
+        StringRedisSerializer keySerializer = new StringRedisSerializer();
+        Jackson2JsonRedisSerializer<Station> valueSerializer =
+                new Jackson2JsonRedisSerializer<>(Station.class);
+        RedisSerializationContext.RedisSerializationContextBuilder<String, Station> builder =
+                RedisSerializationContext.newSerializationContext(keySerializer);
+        RedisSerializationContext<String, Station> context =
+                builder.value(valueSerializer).build();
+        return new ReactiveRedisTemplate<>(factory, context);
+    }
+
+    @Bean
+    public ReactiveRedisTemplate<String, Weather> reactiveRedisTemplateWeather(
+            ReactiveRedisConnectionFactory factory) {
+        StringRedisSerializer keySerializer = new StringRedisSerializer();
+        Jackson2JsonRedisSerializer<Weather> valueSerializer =
+                new Jackson2JsonRedisSerializer<>(Weather.class);
+        RedisSerializationContext.RedisSerializationContextBuilder<String, Weather> builder =
+                RedisSerializationContext.newSerializationContext(keySerializer);
+        RedisSerializationContext<String, Weather> context =
+                builder.value(valueSerializer).build();
+        return new ReactiveRedisTemplate<>(factory, context);
+    }
+
+
+
+//  
 //    @Bean
 //    JedisConnectionFactory jedisConnectionFactory() {
 //        JedisConnectionFactory jedisConnectionFactory = new JedisConnectionFactory();
@@ -102,6 +132,9 @@ public class RedisConfig {
 //
 //        return new ReactiveRedisTemplate<>(factory, context);
 //    }
+
+
+
 //
 //    @Bean
 //    JedisConnectionFactory jedisConnectionFactory() {
