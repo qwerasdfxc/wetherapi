@@ -1,6 +1,7 @@
 package com.example.weatherapi.config;
 
 import com.example.weatherapi.model.Station;
+import com.example.weatherapi.model.User;
 import com.example.weatherapi.model.Weather;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.EnableCaching;
@@ -14,6 +15,7 @@ import org.springframework.data.redis.connection.jedis.JedisConnectionFactory;
 import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
 import org.springframework.data.redis.core.ReactiveRedisOperations;
 import org.springframework.data.redis.core.ReactiveRedisTemplate;
+import org.springframework.data.redis.core.ReactiveValueOperations;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.repository.configuration.EnableRedisRepositories;
 import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
@@ -56,6 +58,10 @@ public class RedisConfig {
                 builder.value(valueSerializer).build();
         return new ReactiveRedisTemplate<>(factory, context);
     }
+    @Bean
+    public ReactiveValueOperations<String, Station> stationReactiveValueOperations(ReactiveRedisTemplate<String, Station> redisTemplate){
+        return redisTemplate.opsForValue();
+    }
 
     @Bean
     public ReactiveRedisTemplate<String, Weather> reactiveRedisTemplateWeather(
@@ -70,6 +76,29 @@ public class RedisConfig {
         return new ReactiveRedisTemplate<>(factory, context);
     }
 
+    @Bean
+    public ReactiveValueOperations<String, Weather> weatherReactiveValueOperations(ReactiveRedisTemplate<String, Weather> redisTemplate){
+        return redisTemplate.opsForValue();
+    }
+
+
+    @Bean
+    public ReactiveRedisTemplate<String, User> reactiveRedisTemplateUser(
+            ReactiveRedisConnectionFactory factory) {
+        StringRedisSerializer keySerializer = new StringRedisSerializer();
+        Jackson2JsonRedisSerializer<User> valueSerializer =
+                new Jackson2JsonRedisSerializer<>(User.class);
+        RedisSerializationContext.RedisSerializationContextBuilder<String, User> builder =
+                RedisSerializationContext.newSerializationContext(keySerializer);
+        RedisSerializationContext<String, User> context =
+                builder.value(valueSerializer).build();
+        return new ReactiveRedisTemplate<>(factory, context);
+    }
+
+    @Bean
+    public ReactiveValueOperations<String, User> userReactiveValueOperations(ReactiveRedisTemplate<String, User> redisTemplate){
+        return redisTemplate.opsForValue();
+    }
 
 
 //  

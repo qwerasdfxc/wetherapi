@@ -108,6 +108,7 @@
             <artifactId>json</artifactId>
             <version>20231013</version>
         </dependency>
+<!--        TODO проверить не блокирующий ли-->
         <dependency>
             <groupId>com.github.vladimir-bukhtoyarov</groupId>
             <artifactId>bucket4j-core</artifactId>

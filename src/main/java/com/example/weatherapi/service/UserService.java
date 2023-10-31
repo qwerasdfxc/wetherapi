@@ -5,6 +5,8 @@ import com.example.weatherapi.exception.AuthException;
 import com.example.weatherapi.mapper.UserMapper;
 import com.example.weatherapi.repository.UserRepository;
 import lombok.SneakyThrows;
+import org.springframework.data.redis.core.ReactiveRedisOperations;
+import org.springframework.data.redis.core.ReactiveValueOperations;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
 
@@ -22,6 +24,8 @@ public class UserService {
     private final UserRepository userRepository;
 
     private final UserMapper userMapper;
+
+//    private final ReactiveValueOperations<String,>
 
     public UserService(UserRepository userRepository, UserMapper userMapper) throws NoSuchAlgorithmException {
         this.userRepository = userRepository;
