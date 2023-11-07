@@ -52,7 +52,6 @@ public class SecurityConfig {
                         })
                 .and()
                 .addFilterAt(bearerAuthenticationWebFilter(authenticationManager), SecurityWebFiltersOrder.AUTHENTICATION)
-
                 .build();
     }
 

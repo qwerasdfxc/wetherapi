@@ -1,4 +1,4 @@
-package com.example.weatherapi.repository;
+package com.example.weatherapi.repository.db;
 
 import com.example.weatherapi.model.User;
 import org.springframework.data.repository.reactive.ReactiveCrudRepository;
@@ -13,5 +13,7 @@ public interface UserRepository extends ReactiveCrudRepository<User, Long> {
     Mono<Boolean> existsByLogin(String username);
 
     Mono<Boolean> existsByKey(String key);
+
+    Mono<User> findByKey(String key);
 
 }

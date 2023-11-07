@@ -35,16 +35,14 @@ public class AuthController {
     @Value("${jwt.secret}")
     private String secret;
 
-    private final ReactiveRedisTemplate<String, Station> stationRedisTemplate;
     private final ReactiveRedisTemplate<String, Weather> weatherRedisTemplate;
 
     private final BearerTokenServerAuthenticationConverter bearerTokenServerAuthenticationConverter = new BearerTokenServerAuthenticationConverter(new JwtHandler(secret));
 
-    public AuthController(UserService userService, SecurityService securityService, UserMapper userMapper, ReactiveRedisTemplate<String, Station> StationRedisTemplate, ReactiveRedisTemplate<String, Weather> weatherRedisTemplate) {
+    public AuthController(UserService userService, SecurityService securityService, UserMapper userMapper, ReactiveRedisTemplate<String, Weather> weatherRedisTemplate) {
         this.userService = userService;
         this.securityService = securityService;
         this.userMapper = userMapper;
-        this.stationRedisTemplate = StationRedisTemplate;
         this.weatherRedisTemplate = weatherRedisTemplate;
     }
 
@@ -66,19 +64,11 @@ public class AuthController {
         System.out.println("payload");
         System.out.println(payload);
         return userService.findUserByLogin(username).map(UserDTO::getKey);
-//        return Mono.empty();
-//        return userService.findUserByLogin(login).map(x ->
-//                    x.getPassword().equals(password) ?
-//                            ResponseEntity.ok(x.getKey())
-//                            : ResponseEntity.status(HttpStatus.UNAUTHORIZED).build()
-//                ).defaultIfEmpty(ResponseEntity.status(HttpStatus.UNAUTHORIZED).build()
-//        );
     }
 
     @PostMapping("test")
     public String test(){
-//        ReactiveValueOperations<String, Station> stationOperations = stationRedisTemplate.opsForValue();
-//        stationOperations.set("test", new Station(1L, "werwer", "rus")).subscribe();
+
         Random random = new Random();
         Weather weather = Weather.builder()
                 .id(3245L)
@@ -94,7 +84,6 @@ public class AuthController {
 
         ReactiveValueOperations<String, Weather> weatherOperations =weatherRedisTemplate.opsForValue();
         weatherOperations.set("test2", weather).subscribe();
-//        weatherOperations.multiGet()
         return "ok";
     }
 }

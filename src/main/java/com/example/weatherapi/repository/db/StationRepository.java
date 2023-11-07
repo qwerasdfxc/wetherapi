@@ -1,4 +1,4 @@
-package com.example.weatherapi.repository;
+package com.example.weatherapi.repository.db;
 
 import com.example.weatherapi.model.Station;
 import org.springframework.data.repository.reactive.ReactiveCrudRepository;

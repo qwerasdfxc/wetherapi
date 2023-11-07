@@ -4,9 +4,10 @@ import com.example.weatherapi.model.CloudType;
 import com.example.weatherapi.model.Direction;
 import com.example.weatherapi.model.Station;
 import com.example.weatherapi.model.Weather;
-import com.example.weatherapi.repository.StationRepository;
-import com.example.weatherapi.repository.WeatherRepository;
+import com.example.weatherapi.repository.db.StationRepository;
+import com.example.weatherapi.repository.db.WeatherRepository;
 import org.springframework.data.redis.core.ReactiveValueOperations;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
 
@@ -37,7 +38,7 @@ public class DataGeneratorService {
 
     }
 
-    //    @Scheduled(fixedRate = 1000 * 60 * 60 * 3)
+    @Scheduled(cron = "0 */3 * * *")
     public Mono<String> generateNewWeatherData() {
         weatherRepository.findAll().flatMap(x ->
                 {
@@ -53,7 +54,7 @@ public class DataGeneratorService {
                             .windDir(Direction.values()[random.nextInt(Direction.values().length)])
                             .build();
                     weatherRepository.save(weather).subscribe();
-                    weatherRedisOperations.set("weather"+weather.getStationId()+"#"+ LocalDateTime.now().format(formatter), weather).subscribe();
+                    weatherRedisOperations.set("weather#"+weather.getStationId()+"#"+ LocalDateTime.now().format(formatter), weather).subscribe();
                     return Mono.just(weather);
                 }
         ).subscribe();

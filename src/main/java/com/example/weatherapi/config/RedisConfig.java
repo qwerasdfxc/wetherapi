@@ -25,9 +25,8 @@ import org.springframework.validation.annotation.Validated;
 
 import java.time.Duration;
 
-@Configuration
 @EnableRedisRepositories
-@EnableCaching
+@Configuration
 public class RedisConfig {
 
     @Value("${redis.host}")

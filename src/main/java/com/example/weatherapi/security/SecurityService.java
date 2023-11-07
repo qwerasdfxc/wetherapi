@@ -2,7 +2,7 @@ package com.example.weatherapi.security;
 
 import com.example.weatherapi.exception.AuthException;
 import com.example.weatherapi.model.User;
-import com.example.weatherapi.repository.UserRepository;
+import com.example.weatherapi.repository.db.UserRepository;
 import com.ongres.scram.common.bouncycastle.base64.Base64;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;

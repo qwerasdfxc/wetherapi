@@ -3,7 +3,7 @@ package com.example.weatherapi.service;
 import com.example.weatherapi.DTO.WeatherDTO;
 import com.example.weatherapi.mapper.WeatherMapper;
 import com.example.weatherapi.model.Weather;
-import com.example.weatherapi.repository.WeatherRepository;
+import com.example.weatherapi.repository.db.WeatherRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.ReactiveRedisTemplate;
@@ -14,8 +14,6 @@ import reactor.core.publisher.Mono;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.List;
-import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
@@ -26,9 +24,7 @@ public class WeatherService {
 
     private final WeatherRepository weatherRepository;
 
-    private final ReactiveValueOperations<String, Weather> weatherReactiveValueOperations;
 
-    private final ReactiveRedisTemplate<String, Weather> redisTemplate;
 
     //в конфиг
     private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd'T'HH");
@@ -50,16 +46,14 @@ public class WeatherService {
                         }
                 )
                 .filter(weather -> weather.getId() != null)
-                .map(weather -> {
-                    System.out.println("weather in map");
-                    return weatherMapper.map(weather);
-                })
-//                .single();
-//                .elementAt(0);
+                .map(weatherMapper::map)
                 .next()
-                //
-                .switchIfEmpty(getByIdFromDB(stationId));
+                .switchIfEmpty(getByIdFromDB(stationId);  );
         //TODO генерация ключа в отдельный метод
+    }
+
+    private String generateRedisWeatherKey(String id){
+        return null;
     }
 
     public Mono<WeatherDTO> getByIdFromDB(Long stationId) {

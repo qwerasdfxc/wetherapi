@@ -1,8 +1,6 @@
 package com.example.weatherapi.security;
 
-import com.example.weatherapi.exception.AuthException;
-import com.example.weatherapi.model.User;
-import com.example.weatherapi.repository.UserRepository;
+import com.example.weatherapi.repository.db.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.ReactiveAuthenticationManager;
 import org.springframework.security.core.Authentication;

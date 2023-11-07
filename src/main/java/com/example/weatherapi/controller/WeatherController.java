@@ -23,7 +23,7 @@ public class WeatherController {
     private final StationsService stationsService;
     private final UserService userService;
     private final WeatherService weatherService;
-    private final Bucket bucket;
+//    private final Bucket bucket;
 
     private final DataGeneratorService dataGeneratorService;
 
@@ -32,15 +32,12 @@ public class WeatherController {
         this.userService = userService;
         this.weatherService = weatherService;
         this.dataGeneratorService = dataGeneratorService;
-        Bandwidth bandwidth = Bandwidth.classic(10, Refill.greedy(10, Duration.ofMinutes(1)));
-        this.bucket = Bucket.builder()
-                .addLimit(bandwidth)
-                .build();
+
     }
 
     @GetMapping("stations")
     public Flux<?> getStations(ServerWebExchange serverWebExchange) {
-        if (bucket.tryConsume(1)) {
+//        if (bucket.tryConsume(1)) {
 
             return userService.existsByKey(serverWebExchange.getRequest().getHeaders().getFirst(HttpHeaders.AUTHORIZATION)).flatMapMany(x -> {
                 if (x)
@@ -50,16 +47,15 @@ public class WeatherController {
                     return Flux.just("Key isn't valid");
                 }
             });
-        } else {
-            serverWebExchange.getResponse().setStatusCode(HttpStatusCode.valueOf(429));
-            return Flux.empty();
-        }
+//        } else {
+//            serverWebExchange.getResponse().setStatusCode(HttpStatusCode.valueOf(429));
+//            return Flux.empty();
+//        }
     }
 
-    //написать фильтр
     @GetMapping("stations/{station_code}")
     public Mono<?> getWeatherByStation(ServerWebExchange serverWebExchange, @PathVariable Long station_code) {
-        if (bucket.tryConsume(1)) {
+//        if (bucket.tryConsume(1)) {
 //                                return weatherService.findByStationId(station_code);
 
 
@@ -71,10 +67,10 @@ public class WeatherController {
                     return Mono.just("Key isn't valid");
                 }
             });
-        } else {
-            serverWebExchange.getResponse().setStatusCode(HttpStatusCode.valueOf(429));
-            return Mono.empty();
-        }
+//        } else {
+//            serverWebExchange.getResponse().setStatusCode(HttpStatusCode.valueOf(429));
+//            return Mono.empty();
+//        }
 
     }
 
