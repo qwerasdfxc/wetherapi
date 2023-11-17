@@ -58,32 +58,9 @@ public class AuthController {
     @PostMapping("get-api-key")
     public Mono<String> getKey(ServerWebExchange swe){
         String token = swe.getRequest().getHeaders().getFirst(HttpHeaders.AUTHORIZATION);
-        String payload = new String( Base64.getDecoder().decode(token.split("\\.")[1]));
-        JSONObject jsonObject = new JSONObject(new String( Base64.getDecoder().decode(token.split("\\.")[1])));
-        String username = (String) jsonObject.get("username");
-        System.out.println("payload");
-        System.out.println(payload);
+        String username = (String) new JSONObject(new String( Base64.getDecoder().decode(token.split("\\.")[1]))).get("username");
         return userService.findUserByLogin(username).map(UserDTO::getKey);
     }
 
-    @PostMapping("test")
-    public String test(){
 
-        Random random = new Random();
-        Weather weather = Weather.builder()
-                .id(3245L)
-                .stationId(11234L)
-                .octane((int) (Math.random() * 10))
-                .cloudType(CloudType.values()[random.nextInt(CloudType.values().length)])
-                .windKph((int) (Math.random() * 30))
-                .temperature((int) (Math.random() * 70) - 35)
-                .isSnow(random.nextBoolean())
-                .isRain(random.nextBoolean())
-                .windDir(Direction.values()[random.nextInt(Direction.values().length)])
-                .build();
-
-        ReactiveValueOperations<String, Weather> weatherOperations =weatherRedisTemplate.opsForValue();
-        weatherOperations.set("test2", weather).subscribe();
-        return "ok";
-    }
 }

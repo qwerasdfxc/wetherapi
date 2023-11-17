@@ -39,7 +39,7 @@ public class SecurityConfig {
                 .authorizeExchange()
                 .pathMatchers(HttpMethod.OPTIONS).permitAll()
                 //TODO delete get-api-key
-                .pathMatchers("/api/register", "/api/stations", "/api/stations/*", "/api/test", "/api/save_stations").permitAll()
+                .pathMatchers("/api/register", "/api/stations", "/api/stations/*", "/api/save_stations").permitAll()
                 .anyExchange()
                 .authenticated()
                 .and()

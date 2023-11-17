@@ -21,15 +21,12 @@ import java.time.Duration;
 public class WeatherController {
 
     private final StationsService stationsService;
-    private final UserService userService;
     private final WeatherService weatherService;
-//    private final Bucket bucket;
 
     private final DataGeneratorService dataGeneratorService;
 
-    public WeatherController(StationsService stationsService, UserService userService, WeatherService weatherService, DataGeneratorService dataGeneratorService) {
+    public WeatherController(StationsService stationsService, WeatherService weatherService, DataGeneratorService dataGeneratorService) {
         this.stationsService = stationsService;
-        this.userService = userService;
         this.weatherService = weatherService;
         this.dataGeneratorService = dataGeneratorService;
 
@@ -37,47 +34,18 @@ public class WeatherController {
 
     @GetMapping("stations")
     public Flux<?> getStations(ServerWebExchange serverWebExchange) {
-//        if (bucket.tryConsume(1)) {
-
-            return userService.existsByKey(serverWebExchange.getRequest().getHeaders().getFirst(HttpHeaders.AUTHORIZATION)).flatMapMany(x -> {
-                if (x)
-                    return stationsService.findAll();
-                else {
-                    serverWebExchange.getResponse().setStatusCode(HttpStatusCode.valueOf(400));
-                    return Flux.just("Key isn't valid");
-                }
-            });
-//        } else {
-//            serverWebExchange.getResponse().setStatusCode(HttpStatusCode.valueOf(429));
-//            return Flux.empty();
-//        }
+        return stationsService.findAll();
     }
 
     @GetMapping("stations/{station_code}")
     public Mono<?> getWeatherByStation(ServerWebExchange serverWebExchange, @PathVariable Long station_code) {
-//        if (bucket.tryConsume(1)) {
-//                                return weatherService.findByStationId(station_code);
-
-
-            return userService.existsByKey(serverWebExchange.getRequest().getHeaders().getFirst(HttpHeaders.AUTHORIZATION)).flatMap(x -> {
-                if (x)
-                    return weatherService.findByStationId(station_code);
-                else {
-                    serverWebExchange.getResponse().setStatusCode(HttpStatusCode.valueOf(400));
-                    return Mono.just("Key isn't valid");
-                }
-            });
-//        } else {
-//            serverWebExchange.getResponse().setStatusCode(HttpStatusCode.valueOf(429));
-//            return Mono.empty();
-//        }
-
+        return weatherService.findByStationId(station_code);
     }
 
 
     @PostMapping("save_stations")
     public Mono<?> save(ServerWebExchange serverWebExchange) throws InterruptedException {
-         return dataGeneratorService.generateNewWeatherData();
+        return dataGeneratorService.generateNewWeatherData();
 
     }
 }

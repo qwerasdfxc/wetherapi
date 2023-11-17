@@ -58,18 +58,7 @@ public class UserService {
                 });
             }
         });
-//        return userRepository.existsByKey(key);
     }
-
-//    private Mono<Boolean> saveInRedisIfExistsInDB(String key){
-//        return userRepository.existsByKey(key).map(x -> {
-//            if(x){
-//                return saveInRedisByKey(key);
-//            }
-//            else
-//                return false;
-//        });
-//    }
 
     private Mono<Boolean> saveInRedisByKey(String key){
         return userRepository.findByKey(key).flatMap(userRedisRepository::saveUser);
