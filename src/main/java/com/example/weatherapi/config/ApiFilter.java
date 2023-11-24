@@ -39,33 +39,6 @@ public class ApiFilter implements WebFilter {
 
     }
 
-//    @Override
-//    public Mono filter(ServerRequest request, HandlerFunction next) {
-//        if (!bucket.tryConsume(1)) {
-////            exchange.getResponse().setStatusCode(HttpStatusCode.valueOf(429));
-//            return ServerResponse.status(HttpStatusCode.valueOf(429)).build();
-////            return Mono.empty();
-//
-//        }
-//        if(request.exchange().getRequest().getPath().toString().contains("stations")){
-//            return userService.existsByKey(request.exchange().getRequest().getHeaders().getFirst("Authorization")).map(result -> {
-//                if (result)
-//                    return next.handle(request);
-////                    return chain.filter(exchange);
-//                else
-//                {
-////                    request.exchange().getResponse().setStatusCode(HttpStatusCode.valueOf(401));
-////                    return Mono.error(new AuthenticationException("key isn't valid"));
-////                    return ServerResponse.status(HttpStatusCode.valueOf(401)).bodyValue("Key isn't valid");
-//                    return Mono.error(new AuthenticationException("2345"));
-//                }
-//            });
-////                    .then(chain.filter(exchange));
-//        }
-//        else
-//            return next.handle(request);
-//
-//    }
 
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, WebFilterChain chain) {
